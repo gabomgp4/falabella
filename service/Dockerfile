@@ -7,7 +7,7 @@ ENV PYTHONPATH=/srv/
 ENV PYTHONUNBUFFERED=1
 
 FROM base as test
-RUN pipenv install --deploy --system --dev
+RUN  pip install pipenv && pipenv install --deploy --system --dev
 COPY ./fallabella ./falabella
 COPY ./pytest.ini ./pytest.ini
 ENV FLASK_APP=falabella.src.app.py
