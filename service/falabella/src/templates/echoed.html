@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Echoed Payload</title>
+    <link href="{{ url_for('static', filename='echoed.css') }}" rel="stylesheet"/>
+</head>
+<body>
+<b>The echoed payload is</b>
+<p>
+<table class="blueTable">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Original</td>
+        <td>{{ payload }}</td>
+    </tr>
+    <tr>
+        <td>Length</td>
+        <td>{{ length }}</td>
+    </tr>
+    <tr>
+        <td>Lower</td>
+        <td>{{ versions.lower }}</td>
+    </tr>
+    <tr>
+        <td>Upper</td>
+        <td>{{ versions.upper }}</td>
+    </tr>
+    <tr>
+        <td>Case fold</td>
+        <td>{{ versions.caseFold }}</td>
+    </tr>
+    <tr>
+        <td>Capitalize</td>
+        <td>{{ versions.capitalize }}</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
