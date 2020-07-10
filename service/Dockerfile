@@ -9,7 +9,7 @@ RUN pip install 'pipenv==2018.11.26'
 
 FROM base as test
 RUN pipenv install --deploy --system --dev
-COPY ./fallabella ./falabella
+COPY ./falabella ./falabella
 COPY ./pytest.ini ./pytest.ini
 ENV FLASK_APP=falabella.src.app.py
 RUN pytest
