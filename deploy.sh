@@ -26,8 +26,8 @@ registry=ggomezakstesting.azurecr.io
 
 pushd ./service
 docker login $registry
-docker build . -t $registry/falabella:0.1
-docker push $registry/falabella:0.1
+docker build . -t $registry/falabella:0.2
+docker push $registry/falabella:0.2
 popd
 
 # Install nginx ingress controller
