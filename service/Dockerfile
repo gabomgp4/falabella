@@ -1,4 +1,4 @@
-FROM python:3.8.3-alpine AS base
+FROM python:3.8.3 AS base
 
 WORKDIR /srv
 COPY ./Pipfile ./Pipfile
