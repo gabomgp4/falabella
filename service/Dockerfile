@@ -17,4 +17,4 @@ RUN pytest
 FROM base as prod
 RUN pipenv install --deploy --system
 COPY --from=test /srv/ ./srv
-ENTRYPOINT ["flask", "run", "--host=0.0.0.0"]
+ENTRYPOINT ["flask", "run", "--host=0.0.0.0", "--port=80"]

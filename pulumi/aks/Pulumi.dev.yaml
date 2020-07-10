@@ -1,0 +1,5 @@
+config:
+  falabella-aks:password:
+    secure: AAABAPtJZgyTLTrm61tvqbi74eEylswo7b55gxXINo9Nxap1N+Zt+JFCxUalfc+2nda63Q==
+  falabella-aks:sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGee7u2cClyiYb+T9cBFHb24fTo2KUUfGdMMIZvjJ4KWe4ZbmiT4cEooKfBCzmMgni0jWDt/TWuIy7KZGE8JPk5o0Asf3U5flT1YSybgf1+YA3WznsiTua77FbzftaSZlFXNHJsInQJgb80O1zHjK2n/xksMtsqdjkE6yNYd65itCHF1mSM13PGWoh5iKdiccZ6MRYrlsDdXsueZrYMB2+4sGum7SMdgBLW9VRD1gmbLvGSpz3ok/uRVE5DNEy74wd0QBFA5NwHpEdurEKIUoXUsDbpM9ukkA02N6S+L6sqvR0oqde7UPL1gL5fVgsbJNH/j2f/BAhapSe0YSLuLrB
+    gs1log\ggomez@LSGGOMEZ

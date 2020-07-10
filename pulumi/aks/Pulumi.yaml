@@ -1,0 +1,3 @@
+name: falabella-aks
+runtime: nodejs
+description: A minimal Azure TypeScript Pulumi program

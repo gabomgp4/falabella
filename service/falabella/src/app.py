@@ -13,3 +13,8 @@ def echo():
 def echoed():
     payload = request.form["payload"]
     return render_template("echoed.html", **get_payload_stats(payload))
+
+
+@app.route('/health')
+def health():
+    return "The service is UP"
