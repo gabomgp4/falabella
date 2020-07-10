@@ -47,7 +47,7 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: ggomez-demo-aks-ingress.westus.cloudapp.azure.com
-      paths: ['./']
+      paths: ['/']
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
