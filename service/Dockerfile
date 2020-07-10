@@ -15,5 +15,5 @@ RUN pytest
 FROM base as prod
 ENV FLASK_APP=falabella.src.app.py
 RUN pipenv install --deploy --system
-COPY --from=test ./ ./
+COPY --from=test /srv /srv
 ENTRYPOINT ["flask", "run", "--host=0.0.0.0", "--port=80"]
