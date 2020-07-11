@@ -37,7 +37,7 @@ Task InstallBinaries -Depends InstallDocker,InstallHelm,InstallAzureCli {
 Task CreateDockerRegistry {
     az group create --name $resourceGroup --location eastus
     az acr create --resource-group $resourceGroup --name myContainerRegistry$suffix --sku Basic
-    az acr login --name myContainerRegistry$suffix
+    sudo az acr login --name myContainerRegistry$suffix
 }
 
 Task CreateIngressController {
