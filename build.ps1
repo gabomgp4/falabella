@@ -92,7 +92,7 @@ Task BuildDockerImage -Depends CreateDockerRegistry {
 
 Task DeployImage -Depends BuildDockerImage, CreateIngressController {
     helm install falabella ./helm/falabella `
-        --set ingress.hosts[0].host=$(aksdomain).eastus.cloudapp.azure.com `
+        --set ingress.hosts[0].host=$($aksdomain).eastus.cloudapp.azure.com `
         --set ingress.hosts[0].paths[0]='/' `
         --set image.repository=$registry_domain/falabella `
         --set image.tag=$imageversion `
