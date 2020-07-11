@@ -44,7 +44,21 @@ Task CreateDockerRegistry -Depends CreateResourceGroup {
     sudo az acr login --name ggomezregistry$suffix
 }
 
-Task CreateIngressController {
+Task CreateAKSCluster -Depends InstallAzureCli,CreateResourceGroup {
+    sudo az aks install-cli
+    az aks create --resource-group $resourceGroup --name "$($resourceGroup)Cluster" --node-count 2 --enable-addons monitoring --generate-ssh-keys
+    sudo az aks get-credentials --resource-group $resourceGroup --name "$($resourceGroup)Cluster"
+}
+
+Task ConfigureDomainPublicIpAKS -Depends CreateAKSCluster {
+    $IP="$external_ip"
+    $PUBLICIPID=$(az network public-ip list --query "[?ipAddress!=null]|[?contains(ipAddress, '$IP')].[id]" --output tsv)
+    $DNSNAME=$aksdomain
+    az network public-ip update --ids $PUBLICIPID --dns-name $DNSNAME
+    az network public-ip show --ids $PUBLICIPID --query "[dnsSettings.fqdn]" --output tsv
+}
+
+Task CreateIngressController -Depends ConfigureDomainPublicIpAKS {
     # # Install nginx ingress controller, necesary in AKS
     # Create a namespace for your ingress resources
     kubectl create namespace ingress-basic
@@ -59,27 +73,9 @@ Task CreateIngressController {
         --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux
 }
 
-Task CreateAKSCluster -Depends InstallAzureCli {
-    az aks install-cli
-    az aks create --resource-group $resourceGroup --name "$($resourceGroup)Cluster" --node-count 2 --enable-addons monitoring --generate-ssh-keys
-    az aks get-credentials --resource-group $resourceGroup --name "$($resourceGroup)Cluster"
-}
-
-Task ConfigureDomainPublicIpAKS {
-    # Public IP address of your ingress controller
-    $IP="$external_ip"
-    # Name to associate with public IP address
-    $DNSNAME=$aksdomain
-    # Get the resource-id of the public ip
-    $PUBLICIPID=$(az network public-ip list --query "[?ipAddress!=null]|[?contains(ipAddress, '$IP')].[id]" --output tsv)
-    # Update public ip address with DNS name
-    az network public-ip update --ids $PUBLICIPID --dns-name $DNSNAME
-    # Display the FQDN
-    az network public-ip show --ids $PUBLICIPID --query "[dnsSettings.fqdn]" --output tsv
-    # Config regcred
+Task CreateRegcred {
     kubectl create secret docker-registry regcred --docker-server=$registry_url --docker-username=$($registry.username) --docker-password="$($registry.password)"
 }
-
 
 Task Build -depends BuildDockerImage {
 

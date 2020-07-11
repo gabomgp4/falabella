@@ -75,12 +75,11 @@ Invoke-psake build.ps1 CreateDockerRegistry
 
 ## Kubernetes cluster
 
-You will need a Kubernetes cluster created and the kubectl command line tool configured to allow acces the cluster and deploy to it.
 
 A very easy way to get a new configured Kubernetes cluter and the kubectl command line tool configured is to use the task *CreateAKSCluster* with the command:
 
 ```powershell
-
+Invoke-psake build.ps1 CreateAKSCluster
 ```
 
 For information about createing a AKS Cluster, you can see the [official documentation](
