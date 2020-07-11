@@ -11,6 +11,7 @@ properties {
     $aksdomain = "demo-aks-ingress"
     $external_ip = $null
     $imageversion = "0.1"
+    $resourceGroup = "ggomez-aks-testing"
 }
 
 $registry_url = "$($registry.server).azurecr.io"
@@ -28,11 +29,6 @@ Task InstallHelm {
     curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 }
 
-Task InstallKubectl {
-    curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl
-    chmod +x ./kubectl
-    mv ./kubectl /usr/local/bin/kubectl
-}
 
 Task CreateIngressController {
     # # Install nginx ingress controller, necesary in AKS
@@ -49,7 +45,18 @@ Task CreateIngressController {
         --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux
 }
 
-Task ConfigureDomainPublicIpAKS {
+Task InstallAzureCli {
+    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+}
+
+Task CreateAKSCluster -Depends InstallAzureCli {
+    az group create --name $resourceGroup --location eastus
+    az aks install-cli
+    az aks create --resource-group $resourceGroup --name "$($resourceGroup)Cluster" --node-count 2 --enable-addons monitoring --generate-ssh-keys
+    az aks get-credentials --resource-group $resourceGroup --name "$($resourceGroup)Cluster"
+}
+
+Task ConfigureDomainPublicIpAKS -Depends InstallAzureCli{
     # Public IP address of your ingress controller
     $IP="$external_ip"
     # Name to associate with public IP address
@@ -64,9 +71,6 @@ Task ConfigureDomainPublicIpAKS {
     kubectl create secret docker-registry regcred --docker-server=$registry_url --docker-username=$($registry.username) --docker-password="$($registry.password)"
 }
 
-Task InstallAzureCli {
-    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-}
 
 Task Build -depends BuildDockerImage {
 
