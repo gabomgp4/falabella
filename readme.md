@@ -43,40 +43,35 @@ Also, the script could requests you to change the InstallationPolicy for powersh
 Please allow to change the InstallationPolicy configuration writting Y in the keyboard.
 
 ## Azure CLI installed and configured
-
-This readme and the script are optimized to use AKS as the Kubernetes cloud service, so for a straigtforward experience is recommended to install the Azure CLI with the command:
-
-```powershell
-
-```
-
-Please note that the powershell snippets requires you to enter the PowerShell shell with the command:
+This readme and the script are optimized to use AKS as the Kubernetes cloud service. The next steps are inside a powershell shell that can be openned with:
 
 ```bash
 pwsh
 ```
 
+So, in the powershell shell you can enter the next command to install the necesary binary dependencies to follow the readme:
+
+```powershell
+Invoke-psake build.ps1 InstallBinaries
+```
+
 ## Azure CLI
 
-You should install and configure Azure CLI. To do that, execute the following command:
+It's better to connect the Azure CLI to your account . To do that, execute the following command:
 
-```bash
-cd falabella
-
+```powershell
+az login
 ```
+
+The command request you to enter a authentication code in a specific URL in the browser, please do that and enter the provided code.
 
 ## Docker image registry
 
-You will need a docker image registry created and its credentials to allow push te builded images and pulling from kubernetes cluster. I'll offer you two options for this.
+The recommended way to create the image registry in Azure and configure the docker cli to connect to that registry is with the following command:
 
-### Manual image registry creation
-
-You can use whatever image registry provider you want. The important thing for this exercise is to configure the docker credentials in the building machine to access that registry. For example, to create the registry you can follow in the Azure Portal [this steps](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal) and to configure the docker credential you can follow [this instructions](https://stackoverflow.com/a/58956760/13071418)
-
-### Automatic image registry creation
-
-Here is the recommended way to create the image registry in Azure and configure the docker cli to connect to that registry:
-
+```powershell
+Invoke-psake build.ps1  CreateDockerRegistry
+```
 
 ## Kubernetes cluster
 

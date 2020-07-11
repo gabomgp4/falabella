@@ -3,18 +3,14 @@
 #First step: configure azure cli credentials
 
 properties {
-    $registry = @{
-        "server"= $null;
-        "username"= $null;
-        "password"= $null;
-    }
-    $aksdomain = "demo-aks-ingress"
-    $external_ip = $null
-    $imageversion = "0.1"
-    $resourceGroup = "ggomez-aks-testing"
+    $suffix = "20201007"
 }
 
-$registry_url = "$($registry.server).azurecr.io"
+$registry_server = "ggomez-test-$suffix"
+$registry_url = "$($registry_server).azurecr.io"
+$aksdomain = "demo-aks-ingress-$suffix"
+$imageversion = "0.1"
+$resourceGroup = "ggomez-aks-testing-$suffix"
 
 Task InstallDocker {
     sudo apt-get update
@@ -38,6 +34,11 @@ Task InstallBinaries -Depends InstallDocker,InstallHelm,InstallAzureCli {
     "install binaries"
 }
 
+Task CreateDockerRegistry {
+    az group create --name $resourceGroup --location eastus
+    az acr create --resource-group $resourceGroup --name myContainerRegistry$suffix --sku Basic
+    az acr login --name myContainerRegistry$suffix
+}
 
 Task CreateIngressController {
     # # Install nginx ingress controller, necesary in AKS
@@ -55,7 +56,6 @@ Task CreateIngressController {
 }
 
 Task CreateAKSCluster -Depends InstallAzureCli {
-    az group create --name $resourceGroup --location eastus
     az aks install-cli
     az aks create --resource-group $resourceGroup --name "$($resourceGroup)Cluster" --node-count 2 --enable-addons monitoring --generate-ssh-keys
     az aks get-credentials --resource-group $resourceGroup --name "$($resourceGroup)Cluster"
