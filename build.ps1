@@ -95,5 +95,6 @@ Task DeployImage -Depends BuildDockerImage, CreateIngressController {
         --set image.repository=$registry_domain/falabella `
         --set image.tag=$imageversion `
         --set service.type=ClusterIP `
+        --set ingress.enabled=true `
         --set replicaCount=2
 }
