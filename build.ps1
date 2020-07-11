@@ -56,7 +56,7 @@ Task CreateAKSCluster -Depends InstallAzureCli {
     az aks get-credentials --resource-group $resourceGroup --name "$($resourceGroup)Cluster"
 }
 
-Task ConfigureDomainPublicIpAKS -Depends InstallAzureCli{
+Task ConfigureDomainPublicIpAKS {
     # Public IP address of your ingress controller
     $IP="$external_ip"
     # Name to associate with public IP address

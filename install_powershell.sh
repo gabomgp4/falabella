@@ -11,3 +11,5 @@ sudo apt-get update
 sudo add-apt-repository universe
 # Install PowerShell
 sudo apt-get install -y powershell
+
+pwsh ./install_psake.ps1
