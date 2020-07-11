@@ -6,7 +6,7 @@ properties {
     $suffix = "20201007"
 
 
-    $registry_name = "ggomez-test-$suffix"
+    $registry_name = "ggomezregistry$suffix"
     $registry_domain = "$($registry_name).azurecr.io"
     $aksdomain = "demo-aks-ingress-$suffix"
     $imageversion = "0.1"
