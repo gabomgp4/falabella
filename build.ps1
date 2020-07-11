@@ -5,7 +5,6 @@
 properties {
     $suffix = "20201007"
 
-
     $registry_name = "ggomezregistry$suffix"
     $registry_domain = "$($registry_name).azurecr.io"
     $aksdomain = "demo-aks-ingress-$suffix"
@@ -35,7 +34,7 @@ Task InstallBinaries -Depends InstallDocker, InstallHelm, InstallAzureCli {
     "install binaries"
 }
 
-Task CreateResourceGroup {
+Task CreateResourceGroup -Depends InstallAzureCli {
     az group create --name $resourceGroup --location eastus
 }
 
@@ -90,5 +89,7 @@ Task BuildDockerImage -Depends CreateDockerRegistry {
 }
 
 Task DeployImage -Depends CreateRegcred, BuildDockerImage {
-
+    helm install falabella ./helm --set ingress.hosts[0].host=$aksdomain `
+        --set image.repository=$registry_domain/falabella `
+        --set image.tag=$imageversion
 }
