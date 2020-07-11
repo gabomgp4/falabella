@@ -89,6 +89,6 @@ Task BuildDockerImage, CreateDockerRegistry {
     popd
 }
 
-Task DeployImage -Depends CreateRegcred, BuildDockerImage {
+Task BuildPushImage -Depends CreateRegcred, BuildDockerImage {
 
 }
