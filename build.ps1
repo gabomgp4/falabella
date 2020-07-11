@@ -40,8 +40,8 @@ Task CreateResourceGroup {
 }
 
 Task CreateDockerRegistry -Depends CreateResourceGroup {
-    az acr create --resource-group $resourceGroup --name ggomezContainer$suffix --sku Basic
-    sudo az acr login --name ggomezContainer$suffix
+    az acr create --resource-group $resourceGroup --name ggomezregistry$suffix --sku Basic
+    sudo az acr login --name ggomezregistry$suffix
 }
 
 Task CreateIngressController {
