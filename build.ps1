@@ -43,9 +43,11 @@ Task CreateDockerRegistry -Depends CreateResourceGroup {
     sudo az acr login --name $registry_name
 }
 
-Task CreateAKSCluster -Depends InstallAzureCli, CreateResourceGroup {
+Task CreateAKSCluster -Depends CreateDockerRegistry, CreateResourceGroup {
     sudo az aks install-cli
-    az aks create --resource-group $resourceGroup --name "$($resourceGroup)Cluster" --node-count 2 --enable-addons monitoring --generate-ssh-keys
+    az aks create --resource-group $resourceGroup --name "$($resourceGroup)Cluster" `
+        --node-count 2 --enable-addons monitoring --generate-ssh-keys `
+        --attach-acr $registry_name
     sudo az aks get-credentials --resource-group $resourceGroup --name "$($resourceGroup)Cluster"
 }
 
@@ -72,15 +74,6 @@ Task CreateIngressController -Depends ConfigureDomainPublicIpAKS, InstallHelm {
         --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux
 }
 
-Task CreateRegcred {
-    pushd ~
-    sudo cat ~/.docker/config.json > ~/.dockerconfig.json
-    kubectl create secret generic regcred `
-        --from-file=.dockerconfigjson=.dockerconfig.json `
-        --type=kubernetes.io/dockerconfigjson
-    popd
-}
-
 Task BuildDockerImage -Depends CreateDockerRegistry {
     pushd ./service
     sudo docker build . -t $registry_domain/falabella:$imageversion
@@ -88,9 +81,10 @@ Task BuildDockerImage -Depends CreateDockerRegistry {
     popd
 }
 
-Task DeployImage {
+Task DeployImage -Depends BuildDockerImage {
     helm install falabella ./helm/falabella --set ingress.hosts[0].host=$aksdomain `
         --set image.repository=$registry_domain/falabella `
         --set image.tag=$imageversion `
-        --set service.type=ClusterIP
+        --set service.type=ClusterIP `
+        --set replicaCount=2
 }
