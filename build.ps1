@@ -51,14 +51,14 @@ Task CreateAKSCluster -Depends InstallAzureCli,CreateResourceGroup {
 }
 
 Task ConfigureDomainPublicIpAKS -Depends CreateAKSCluster {
-    $IP="$external_ip"
-    $PUBLICIPID=$(az network public-ip list --query "[?ipAddress!=null]|[?contains(ipAddress, '$IP')].[id]" --output tsv)
+    $rgKubernetesResources = "MC_$resourceGroup_$($resourceGroup)Cluster_eastus"
+    $PUBLICIPID=$(az network public-ip list --resource-group=$rgKubernetesResources --query "[?tags.owner!=null]|[?contains(tags.owner, 'kubernetes')].[id]" --output tsv)
     $DNSNAME=$aksdomain
     az network public-ip update --ids $PUBLICIPID --dns-name $DNSNAME
     az network public-ip show --ids $PUBLICIPID --query "[dnsSettings.fqdn]" --output tsv
 }
 
-Task CreateIngressController -Depends ConfigureDomainPublicIpAKS {
+Task CreateIngressController -Depends ConfigureDomainPublicIpAKS,InstallHelm {
     # # Install nginx ingress controller, necesary in AKS
     # Create a namespace for your ingress resources
     kubectl create namespace ingress-basic
