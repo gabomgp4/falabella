@@ -29,6 +29,15 @@ Task InstallHelm {
     curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 }
 
+Task InstallAzureCli {
+    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+}
+
+
+Task InstallBinaries -Depends InstallDocker,InstallHelm,InstallAzureCli {
+
+}
+
 
 Task CreateIngressController {
     # # Install nginx ingress controller, necesary in AKS
@@ -43,10 +52,6 @@ Task CreateIngressController {
         --set controller.replicaCount=2 `
         --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux `
         --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux
-}
-
-Task InstallAzureCli {
-    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 }
 
 Task CreateAKSCluster -Depends InstallAzureCli {

@@ -30,8 +30,17 @@ So, to install powershell and psake, please run the command:
 
 ```bash
 cd falabella
-sh install_p.sh
+sh install_powershell.sh
 ```
+
+It is posible that the script requests you for the root credential to do some package installation, please provide it.
+
+Also, the script could requests you to change the InstallationPolicy for powershell to allow the installation of psake with the following message:
+
+    You are installing the modules from an untrusted repository. If you trust this repository, change its InstallationPolicy value by running the Set-PSRepository cmdlet. Are you sure you want to install the modules from 'PSGallery'?
+
+
+Please allow to change the InstallationPolicy configuration writting Y in the keyboard.
 
 ## Azure CLI installed and configured
 
@@ -41,6 +50,11 @@ This readme and the script are optimized to use AKS as the Kubernetes cloud serv
 
 ```
 
+Please note that the powershell snippets requires you to enter the PowerShell shell with the command:
+
+```bash
+pwsh
+```
 
 ## Azure CLI
 
