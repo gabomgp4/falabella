@@ -70,7 +70,7 @@ The command request you to enter a authentication code in a specific URL in the 
 The recommended way to create the image registry in Azure and configure the docker cli to connect to that registry is with the following command:
 
 ```powershell
-Invoke-psake build.ps1  CreateDockerRegistry
+Invoke-psake build.ps1 CreateDockerRegistry
 ```
 
 ## Kubernetes cluster
