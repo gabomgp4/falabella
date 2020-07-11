@@ -4,13 +4,14 @@
 
 properties {
     $suffix = "20201007"
-}
 
-$registry_server = "ggomez-test-$suffix"
-$registry_url = "$($registry_server).azurecr.io"
-$aksdomain = "demo-aks-ingress-$suffix"
-$imageversion = "0.1"
-$resourceGroup = "ggomez-aks-testing-$suffix"
+
+    $registry_server = "ggomez-test-$suffix"
+    $registry_url = "$($registry_server).azurecr.io"
+    $aksdomain = "demo-aks-ingress-$suffix"
+    $imageversion = "0.1"
+    $resourceGroup = "ggomez-aks-testing-$suffix"
+}
 
 Task InstallDocker {
     sudo apt-get update
@@ -37,7 +38,7 @@ Task InstallBinaries -Depends InstallDocker,InstallHelm,InstallAzureCli {
 Task CreateDockerRegistry {
     az group create --name $resourceGroup --location eastus
     az acr create --resource-group $resourceGroup --name myContainerRegistry$suffix --sku Basic
-    sudo az acr login --name myContainerRegistry$suffix
+    sudo az acr login --name ggomez-container-$suffix
 }
 
 Task CreateIngressController {
