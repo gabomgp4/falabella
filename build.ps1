@@ -4,9 +4,9 @@
 
 properties {
     $registry = @{
-        "server"= "ggomezakstesting";
-        "username"= "ggomezakstesting";
-        "password"= "BKmixuI1xLkUPbL=foInrF7BASnE53Bx"
+        "server"= $null;
+        "username"= $null;
+        "password"= $null;
     }
     $aksdomain = "demo-aks-ingress"
     $external_ip = $null
@@ -73,7 +73,7 @@ Task Build -depends BuildDockerImage {
 }
 
 Task DeployHelmChart {
-    
+
 }
 
 Task BuildDockerImage {
