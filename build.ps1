@@ -35,8 +35,11 @@ Task InstallBinaries -Depends InstallDocker,InstallHelm,InstallAzureCli {
     "install binaries"
 }
 
-Task CreateDockerRegistry {
+Task CreateResourceGroup {
     az group create --name $resourceGroup --location eastus
+}
+
+Task CreateDockerRegistry -Depends CreateResourceGroup {
     az acr create --resource-group $resourceGroup --name myContainerRegistry$suffix --sku Basic
     sudo az acr login --name ggomez-container-$suffix
 }
