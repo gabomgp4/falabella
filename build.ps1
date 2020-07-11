@@ -14,7 +14,8 @@ properties {
 # By default, the executed task is DeployImage
 Task default -Depends DeployImage
 
-# Taks to install binary
+# Taks to install binary dependencies
+
 Task InstallDocker {
     sudo apt-get update
     sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
@@ -36,6 +37,8 @@ Task InstallAzureCli {
 Task InstallBinaries -Depends InstallDocker, InstallHelm, InstallAzureCli {
     "install binaries"
 }
+
+#  Tasks to create required resources in Azure
 
 Task CreateResourceGroup -Depends InstallAzureCli {
     az group create --name $resourceGroup --location eastus
@@ -61,6 +64,9 @@ Task ConfigureDomainPublicIpAKS -Depends CreateAKSCluster {
     az network public-ip update --ids $PUBLICIPID --dns-name $DNSNAME
     az network public-ip show --ids $PUBLICIPID --query "[dnsSettings.fqdn]" --output tsv
 }
+
+
+# Tasks to deploy required resources to AKS Cluster
 
 Task CreateIngressController -Depends ConfigureDomainPublicIpAKS, InstallHelm {
     # # Install nginx ingress controller, necesary in AKS
