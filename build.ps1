@@ -58,7 +58,7 @@ Task CreateAKSCluster -Depends CreateDockerRegistry, CreateResourceGroup {
 }
 
 Task ConfigureDomainPublicIpAKS -Depends CreateAKSCluster {
-    $rgKubernetesResources = "MC_$resourceGroup_$($resourceGroup)Cluster_eastus"
+    $rgKubernetesResources = "MC_$($resourceGroup)_$($resourceGroup)Cluster_eastus"
     $PUBLICIPID=$(az network public-ip list --resource-group=$rgKubernetesResources --query "[?tags.owner!=null]|[?contains(tags.owner, 'kubernetes')].[id]" --output tsv)
     $DNSNAME=$aksdomain
     az network public-ip update --ids $PUBLICIPID --dns-name $DNSNAME
