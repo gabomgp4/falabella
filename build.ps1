@@ -54,7 +54,7 @@ Task CreateAKSCluster -Depends CreateDockerRegistry, CreateResourceGroup {
     az aks create --resource-group $resourceGroup --name "$($resourceGroup)Cluster" `
         --node-count 2 --enable-addons monitoring --generate-ssh-keys `
         --attach-acr $registry_name
-    sudo az aks get-credentials --resource-group $resourceGroup --name "$($resourceGroup)Cluster"
+    az aks get-credentials --resource-group $resourceGroup --name "$($resourceGroup)Cluster"
 }
 
 Task ConfigureDomainPublicIpAKS -Depends CreateAKSCluster {
