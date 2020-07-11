@@ -6,8 +6,8 @@ properties {
     $suffix = "20201007"
 
 
-    $registry_server = "ggomez-test-$suffix"
-    $registry_url = "$($registry_server).azurecr.io"
+    $registry_name = "ggomez-test-$suffix"
+    $registry_domain = "$($registry_name).azurecr.io"
     $aksdomain = "demo-aks-ingress-$suffix"
     $imageversion = "0.1"
     $resourceGroup = "ggomez-aks-testing-$suffix"
@@ -40,8 +40,8 @@ Task CreateResourceGroup {
 }
 
 Task CreateDockerRegistry -Depends CreateResourceGroup {
-    az acr create --resource-group $resourceGroup --name ggomezregistry$suffix --sku Basic
-    sudo az acr login --name ggomezregistry$suffix
+    az acr create --resource-group $resourceGroup --name $registry_name --sku Basic
+    sudo az acr login --name $registry_name
 }
 
 Task CreateAKSCluster -Depends InstallAzureCli, CreateResourceGroup {
@@ -84,8 +84,8 @@ Task CreateRegcred {
 
 Task BuildDockerImage -Depends CreateDockerRegistry {
     pushd ./service
-    sudo docker build . -t $registry_url/falabella:$imageversion
-    sudo docker push $registry_url/falabella:$imageversion
+    sudo docker build . -t $registry_domain/falabella:$imageversion
+    sudo docker push $registry_domain/falabella:$imageversion
     popd
 }
 
