@@ -89,7 +89,7 @@ Task BuildDockerImage -Depends CreateDockerRegistry {
 }
 
 Task DeployImage {
-    helm install falabella ./helm --set ingress.hosts[0].host=$aksdomain `
+    helm install falabella ./helm/falabella --set ingress.hosts[0].host=$aksdomain `
         --set image.repository=$registry_domain/falabella `
         --set image.tag=$imageversion `
         --set service.type=ClusterIP
