@@ -50,7 +50,7 @@ Task CreateDockerRegistry -Depends CreateResourceGroup {
 }
 
 Task CreateAKSCluster -Depends CreateDockerRegistry, CreateResourceGroup {
-    az aks install-cli
+    sudo az aks install-cli
     az aks create --resource-group $resourceGroup --name "$($resourceGroup)Cluster" `
         --node-count 2 --enable-addons monitoring --generate-ssh-keys `
         --attach-acr $registry_name
