@@ -82,7 +82,7 @@ Task CreateRegcred {
     popd
 }
 
-Task BuildDockerImage, CreateDockerRegistry {
+Task BuildDockerImage -Depends CreateDockerRegistry {
     pushd ./service
     sudo docker build . -t $registry_url/falabella:$imageversion
     sudo docker push $registry_url/falabella:$imageversion
