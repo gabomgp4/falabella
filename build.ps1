@@ -81,7 +81,7 @@ Task BuildDockerImage -Depends CreateDockerRegistry {
     popd
 }
 
-Task DeployImage -Depends BuildDockerImage {
+Task DeployImage -Depends BuildDockerImage, CreateIngressController {
     helm install falabella ./helm/falabella --set ingress.hosts[0].host=$aksdomain `
         --set image.repository=$registry_domain/falabella `
         --set image.tag=$imageversion `
