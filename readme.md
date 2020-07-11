@@ -90,3 +90,35 @@ Invoke-psake build.ps1 CreateIngressController
 
 ## Docker image building
 
+To build the docker image, you can use the command:
+
+```
+Invoke-psake build.ps1  BuildDockerImage
+```
+
+Take in accont that the unit tests are executed as part of the docker image building, as a phase in the multi-phase dockerfile. That can be changed, but for me is preferable to block the image building process if something as importante as the unit tests are failing. For python, I cant's see to much value in having a separate phase at the psake level, althougt that can be made.
+
+## Final deploying
+
+The command to do the final deploying from the docker registry to the AKS cluster is to:
+
+```powershell
+Invoke-psake build.ps1  DeployImage
+```
+
+Or if you want, it's possible to omit the task name with:
+
+```powershell
+Invoke-psake build.ps1
+```
+
+The result from the two commands is the same.
+
+# Final observations
+
+To put the service in a real production enviroment, I can see the next thing are missing:
+
+* To develop E2E tests that are executed as after the deployment, automatically, using docker. I prefer to use selenium from Typescript to do the tests, but I hadn't enough time to do that thing.
+* I'm very happy using Pulumi, and in this very simple case is not necesary, but to orchestate many resource, including resources thar are from diferente clouds providers, It's a very efective tool, similar to Terraform but better for me.
+* In a real service, prabably we want to do proper integration testing too, coordinating two or more docker containers to the integration testing.
+* It's missing some piece to do the gitops, I used TFS pipelines as the process triggers that starts new works in response to pushed commits in the git repository (TFS too).

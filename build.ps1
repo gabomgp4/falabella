@@ -88,3 +88,7 @@ Task DeployImage -Depends BuildDockerImage {
         --set service.type=ClusterIP `
         --set replicaCount=2
 }
+
+Task default -Depends DeployImage {
+
+}
