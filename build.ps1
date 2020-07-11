@@ -1,7 +1,5 @@
 #!/usr/bin/env pwsh
 
-#First step: configure azure cli credentials
-
 properties {
     $suffix = "20201007"
 
@@ -12,6 +10,11 @@ properties {
     $resourceGroup = "ggomez-aks-testing-$suffix"
 }
 
+
+# By default, the executed task is DeployImage
+Task default -Depends DeployImage
+
+# Taks to install binary
 Task InstallDocker {
     sudo apt-get update
     sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
@@ -87,8 +90,4 @@ Task DeployImage -Depends BuildDockerImage, CreateIngressController {
         --set image.tag=$imageversion `
         --set service.type=ClusterIP `
         --set replicaCount=2
-}
-
-Task default -Depends DeployImage {
-
 }
