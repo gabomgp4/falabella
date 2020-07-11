@@ -82,4 +82,11 @@ A very easy way to get a new configured Kubernetes cluter and the kubectl comman
 Invoke-psake build.ps1 CreateAKSCluster
 ```
 
-For information about createing a AKS Cluster, you can see the [official documentation](
+It is recommended to use the task *CreateIngressController* to allow AKS Cluster to support ingress resources:
+
+```powershell
+Invoke-psake build.ps1 CreateIngressController
+```
+
+## Docker image building
+

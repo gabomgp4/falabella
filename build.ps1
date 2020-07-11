@@ -31,7 +31,7 @@ Task InstallAzureCli {
 }
 
 
-Task InstallBinaries -Depends InstallDocker,InstallHelm,InstallAzureCli {
+Task InstallBinaries -Depends InstallDocker, InstallHelm, InstallAzureCli {
     "install binaries"
 }
 
@@ -44,7 +44,7 @@ Task CreateDockerRegistry -Depends CreateResourceGroup {
     sudo az acr login --name ggomezregistry$suffix
 }
 
-Task CreateAKSCluster -Depends InstallAzureCli,CreateResourceGroup {
+Task CreateAKSCluster -Depends InstallAzureCli, CreateResourceGroup {
     sudo az aks install-cli
     az aks create --resource-group $resourceGroup --name "$($resourceGroup)Cluster" --node-count 2 --enable-addons monitoring --generate-ssh-keys
     sudo az aks get-credentials --resource-group $resourceGroup --name "$($resourceGroup)Cluster"
@@ -58,7 +58,7 @@ Task ConfigureDomainPublicIpAKS -Depends CreateAKSCluster {
     az network public-ip show --ids $PUBLICIPID --query "[dnsSettings.fqdn]" --output tsv
 }
 
-Task CreateIngressController -Depends ConfigureDomainPublicIpAKS,InstallHelm {
+Task CreateIngressController -Depends ConfigureDomainPublicIpAKS, InstallHelm {
     # # Install nginx ingress controller, necesary in AKS
     # Create a namespace for your ingress resources
     kubectl create namespace ingress-basic
@@ -74,21 +74,21 @@ Task CreateIngressController -Depends ConfigureDomainPublicIpAKS,InstallHelm {
 }
 
 Task CreateRegcred {
-    kubectl create secret docker-registry regcred --docker-server=$registry_url --docker-username=$($registry.username) --docker-password="$($registry.password)"
-}
-
-Task Build -depends BuildDockerImage {
-
-}
-
-Task DeployHelmChart {
-
+    pushd ~
+    sudo cat ~/.docker/config.json > ~/.dockerconfig.json
+    kubectl create secret generic regcred `
+        --from-file=.dockerconfigjson=.dockerconfig.json `
+        --type=kubernetes.io/dockerconfigjson
+    popd
 }
 
 Task BuildDockerImage {
     pushd ./service
-    docker login $registry_url
     docker build . -t $registry_url/falabella:$imageversion
     docker push $registry_url/falabella:$imageversion
     popd
+}
+
+Task DeployImage -Depends CreateRegcred, CreateRegcred {
+
 }
